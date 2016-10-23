@@ -2,19 +2,21 @@
   "name": "project-graph",
   "version": "0.1.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "./bin/www",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "node ./bin/www",
+    "start:debug": "nodemon --debug ./bin/www",
     "precommit": "nsp check"
   },
   "author": "Andy McCoy",
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.0",
-    "helmet": "^2.3.0",
-    "nsp": "^2.6.2"
+    "helmet": "^2.3.0"
   },
   "devDependencies": {
-    "husky": "^0.11.9"
+    "husky": "^0.11.9",
+    "nodemon": "^1.11.0",
+    "nsp": "^2.6.2"
   }
 }
