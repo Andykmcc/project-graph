@@ -1,19 +1,13 @@
 const express = require('express');
 const router  = express.Router();
-// mock data for basic setup and tesing.
-const mockUsers = require('./users.mock.json');
+const usersController = require('./usersController');
 
 // example.com/api/v1/users
-router.get('/users', function (req, res) {
-  res.json(mockUsers);
-});
+router.get('/users', (req, res) => res.json(usersController.getUsers()));
 
 // example.com/api/v1/users/1
-router.get('/users/:userId', function (req, res) {
-  const user = mockUsers.users.find(function (item) {
-    return parseInt(item.id, 10) === parseInt(req.params.userId, 10);
-  });
-  res.json(user);
+router.get('/users/:userId', (req, res) => {
+  res.json(usersController.getUser(req.params.userId));
 });
 
 module.exports = router;
