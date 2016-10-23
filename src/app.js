@@ -1,12 +1,11 @@
 const express = require('express');
 const helmet = require('helmet');
+const apiV1Router = require('./api/v1/index');
 
 const app = express();
 
 app.use(helmet());
 
-app.get('/', function (req, res) {
-  res.send('ok');
-})
+app.use('/api/v1', apiV1Router);
 
 module.exports = app;
