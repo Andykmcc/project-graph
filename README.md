@@ -21,8 +21,3 @@ This assumes you have NodeJS and NPM installed. I suggest installing Node via [N
 
 1. `npm run start:dev`
 2. In another terminal run `curl 'http://localhost:8080/api/v1/efforts'` to test the API
-
-## TODO
-
-- [ ] setup DB
-- [ ] setup CI/code coverage
