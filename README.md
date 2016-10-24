@@ -1,5 +1,7 @@
 # Project Graph
 
+[![Build Status](https://travis-ci.org/Andykmcc/project-graph.svg?branch=master)](https://travis-ci.org/Andykmcc/project-graph)
+
 A project management tool
 
 This is built on NodeJS and Express. It is a stateless JSON API.
