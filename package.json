@@ -8,7 +8,9 @@
     "start:dev": "nodemon --debug ./bin/www",
     "precommit": "npm-run-all --parallel test test:security",
     "test:security": "nsp check",
-    "test": "mocha src/**/*.spec.js"
+    "test": "mocha src/**/*.spec.js",
+    "cover": "istanbul cover _mocha src/**/*.spec.js",
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "author": "Andy McCoy",
   "license": "ISC",
@@ -17,8 +19,11 @@
     "helmet": "^2.3.0"
   },
   "devDependencies": {
+    "coveralls": "^2.11.14",
     "husky": "^0.11.9",
+    "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
+    "mocha-lcov-reporter": "^1.2.0",
     "nodemon": "^1.11.0",
     "npm-run-all": "^3.1.1",
     "nsp": "^2.6.2"
