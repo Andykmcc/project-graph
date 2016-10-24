@@ -1,6 +1,7 @@
 # Project Graph
 
-[![Build Status](https://travis-ci.org/Andykmcc/project-graph.svg?branch=master)](https://travis-ci.org/Andykmcc/project-graph) [![Coverage Status](https://coveralls.io/repos/github/Andykmcc/project-graph/badge.svg)](https://coveralls.io/github/Andykmcc/project-graph)
+[![Build Status](https://travis-ci.org/Andykmcc/project-graph.svg?branch=master)](https://travis-ci.org/Andykmcc/project-graph) [![Coverage Status](https://coveralls.io/repos/github/Andykmcc/project-graph/badge.svg?branch=master)](https://coveralls.io/github/Andykmcc/project-graph?branch=master)
+
 
 A project management tool
 
