@@ -1,6 +1,7 @@
 const express = require('express');
-const router  = express.Router();
 const effortController = require('./effortsController');
+const session = require('../../../db').session();
+const router  = express.Router();
 
 // example.com/api/v1/efforts
 router.get('/efforts', (req, res) => res.json(effortController.getEfforts()));

@@ -1,0 +1,5 @@
+{
+  "HOST": "bolt://localhost:7687",
+  "USERNAME": "CHANGE ME",
+  "PASSWORD": "CHANGE ME"
+}
