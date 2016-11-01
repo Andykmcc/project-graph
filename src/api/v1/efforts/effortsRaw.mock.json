@@ -1,0 +1,182 @@
+{
+  "records": [
+    {
+      "keys": [
+        "n"
+      ],
+      "length": 1,
+      "_fields": [
+        {
+          "identity": {
+            "low": 9,
+            "high": 0
+          },
+          "labels": [
+            "Effort"
+          ],
+          "properties": {
+            "title": "example title 1"
+          }
+        }
+      ],
+      "_fieldLookup": {
+        "n": 0
+      }
+    },
+    {
+      "keys": [
+        "n"
+      ],
+      "length": 1,
+      "_fields": [
+        {
+          "identity": {
+            "low": 10,
+            "high": 0
+          },
+          "labels": [
+            "Effort"
+          ],
+          "properties": {
+            "title": "example title 2"
+          }
+        }
+      ],
+      "_fieldLookup": {
+        "n": 0
+      }
+    },
+    {
+      "keys": [
+        "n"
+      ],
+      "length": 1,
+      "_fields": [
+        {
+          "identity": {
+            "low": 12,
+            "high": 0
+          },
+          "labels": [
+            "Effort"
+          ],
+          "properties": {
+            "title": "example title 3"
+          }
+        }
+      ],
+      "_fieldLookup": {
+        "n": 0
+      }
+    },
+    {
+      "keys": [
+        "n"
+      ],
+      "length": 1,
+      "_fields": [
+        {
+          "identity": {
+            "low": 13,
+            "high": 0
+          },
+          "labels": [
+            "Effort"
+          ],
+          "properties": {
+            "title": "example title 4"
+          }
+        }
+      ],
+      "_fieldLookup": {
+        "n": 0
+      }
+    },
+    {
+      "keys": [
+        "n"
+      ],
+      "length": 1,
+      "_fields": [
+        {
+          "identity": {
+            "low": 14,
+            "high": 0
+          },
+          "labels": [
+            "Effort"
+          ],
+          "properties": {
+            "title": "example title 4"
+          }
+        }
+      ],
+      "_fieldLookup": {
+        "n": 0
+      }
+    },
+    {
+      "keys": [
+        "n"
+      ],
+      "length": 1,
+      "_fields": [
+        {
+          "identity": {
+            "low": 15,
+            "high": 0
+          },
+          "labels": [
+            "Effort"
+          ],
+          "properties": {
+            "title": "example title 6"
+          }
+        }
+      ],
+      "_fieldLookup": {
+        "n": 0
+      }
+    }
+  ],
+  "summary": {
+    "statement": {
+      "text": "MATCH (n:Effort) RETURN n LIMIT 10",
+      "parameters": {}
+    },
+    "statementType": "r",
+    "counters": {
+      "_stats": {
+        "nodesCreated": 0,
+        "nodesDeleted": 0,
+        "relationshipsCreated": 0,
+        "relationshipsDeleted": 0,
+        "propertiesSet": 0,
+        "labelsAdded": 0,
+        "labelsRemoved": 0,
+        "indexesAdded": 0,
+        "indexesRemoved": 0,
+        "constraintsAdded": 0,
+        "constraintsRemoved": 0
+      }
+    },
+    "updateStatistics": {
+      "_stats": {
+        "nodesCreated": 0,
+        "nodesDeleted": 0,
+        "relationshipsCreated": 0,
+        "relationshipsDeleted": 0,
+        "propertiesSet": 0,
+        "labelsAdded": 0,
+        "labelsRemoved": 0,
+        "indexesAdded": 0,
+        "indexesRemoved": 0,
+        "constraintsAdded": 0,
+        "constraintsRemoved": 0
+      }
+    },
+    "plan": false,
+    "profile": false,
+    "notifications": []
+  }
+}

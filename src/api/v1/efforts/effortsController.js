@@ -1,17 +1,35 @@
-// mock data for basic setup and tesing.
-const exampleEfforts = require('./exampleEfforts.json');
+const R = require('ramda');
+const effortsUtils = require('./effortsUtils');
+const driver = require('../../../db');
 
 function getEfforts () {
-  return exampleEfforts;
+  const session = driver.session();
+  const processResults = R.curry(effortsUtils.handleSuccess)(session);
+  const processError = R.curry(effortsUtils.handleError)(session);
+
+  return session.run('MATCH (n:Effort) RETURN n LIMIT 10')
+    .then(processResults)
+    .catch(processError);
 }
 
-function getEffort (effortId) {
-  return exampleEfforts.find(item => {
-    return parseInt(item.id, 10) === parseInt(effortId, 10);
-  });
+function createEffort (params) {
+  const session = driver.session();
+  const processResults = R.curry(effortsUtils.handleSuccess)(session);
+  const processError = R.curry(effortsUtils.handleError)(session);
+
+  return session.run(`
+    CREATE (n:Effort {
+      title: {title}
+    })
+    RETURN n
+    `,
+    Object.assign({}, params)
+    )
+    .then(processResults)
+    .catch(processError);
 }
 
 module.exports = {
   getEfforts,
-  getEffort
+  createEffort
 }

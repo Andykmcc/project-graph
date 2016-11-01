@@ -2,13 +2,15 @@
   "name": "project-graph",
   "version": "0.1.0",
   "description": "",
+  "repository": "https://github.com/Andykmcc/project-graph",
   "main": "./bin/www",
   "scripts": {
     "start": "node ./bin/www",
-    "start:dev": "nodemon --debug ./bin/www",
+    "start:dev": "node-inspector --web-port=9090 & nodemon --debug ./bin/www",
     "precommit": "npm-run-all --parallel test test:security",
-    "test:security": "nsp check",
     "test": "mocha src/**/*.spec.js",
+    "test:security": "nsp check",
+    "test:watch": "mocha --watch src/**/*.spec.js",
     "cover": "istanbul cover _mocha src/**/*.spec.js",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
@@ -18,7 +20,9 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "helmet": "^2.3.0",
-    "neo4j-driver": "^1.1.0-M02"
+    "nconf": "^0.8.4",
+    "neo4j-driver": "^1.1.0-M02",
+    "ramda": "^0.22.1"
   },
   "devDependencies": {
     "coveralls": "^2.11.14",
@@ -26,8 +30,10 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
     "mocha-lcov-reporter": "^1.2.0",
+    "node-inspector": "^0.12.8",
     "nodemon": "^1.11.0",
     "npm-run-all": "^3.1.1",
-    "nsp": "^2.6.2"
+    "nsp": "^2.6.2",
+    "sinon": "^1.17.6"
   }
 }
