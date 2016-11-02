@@ -13,18 +13,23 @@ function getEfforts () {
 }
 
 function createEffort (params) {
+  if (params === undefined) {
+    return Promise.reject(new Error('createEffort requires parameters'));
+  };
+
+  const paramsWhiteList = ['title'];
   const session = driver.session();
   const processResults = R.curry(effortsUtils.handleSuccess)(session);
   const processError = R.curry(effortsUtils.handleError)(session);
+  const paramString = effortsUtils.makeParamString(paramsWhiteList);
 
   return session.run(`
     CREATE (n:Effort {
-      title: {title}
+      ${paramString}
     })
     RETURN n
     `,
-    Object.assign({}, params)
-    )
+    R.pick(paramsWhiteList, params))
     .then(processResults)
     .catch(processError);
 }

@@ -1,3 +1,5 @@
+const R = require('ramda');
+
 function handleSuccess (session, results) {
   session.close();
   if (results.records && results.records.length) {
@@ -20,7 +22,16 @@ function handleError (session, error) {
   return error;
 }
 
+function makeParamString (params) {
+  return R.reduce((memo, item) => {
+    return `${memo} ${item}: {${item}},`
+  }, '', params)
+  .replace(/\,$/, "")
+  .trim();
+}
+
 module.exports = {
   handleSuccess,
-  handleError
+  handleError,
+  makeParamString
 }

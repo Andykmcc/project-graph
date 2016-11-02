@@ -12,7 +12,8 @@ describe('effortsController', () => {
       return {
         run: function () {
           return Promise.resolve();
-        }
+        },
+        close: function () {}
       };
     });
   });
@@ -34,12 +35,19 @@ describe('effortsController', () => {
 
   describe('#createEffort()', () => {
     it('should create a new driver session', (done) => {
-      const effortsPromise = effortsController.createEffort()
+      const effortsPromise = effortsController.createEffort({})
 
       sinon.assert.calledOnce(driver.session);
 
       effortsPromise.then(() => done());
-      effortsPromise.catch(() => done());
+    });
+
+    it('should return a rejected promise if no params are passed', (done) => {
+      const effortsPromise = effortsController.createEffort();
+
+      effortsPromise.catch((error) => {
+        done();
+      });
     });
   });
 });
@@ -86,6 +94,18 @@ describe('effortsUtils', () => {
     it('should return the error passed in', () => {
       const err = {msg: 'unique error msg'};
       assert.deepEqual(err, effortsUtils.handleError(session, err));
+    });
+  });
+
+  describe('#makeParamString()', () => {
+    it('should not have a trailing comma (,)', () => {
+      const result = effortsUtils.makeParamString(['key1', 'key2']);
+      assert(result[result.length - 1] !== ',');
+    });
+    it('should contain each key twice', () => {
+      const result = effortsUtils.makeParamString(['dog', 'cat']);
+      assert((result.match(/cat/g)).length === 2);
+      assert((result.match(/dog/g)).length === 2);
     });
   });
 });
