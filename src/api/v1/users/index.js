@@ -3,10 +3,10 @@ const router  = express.Router();
 const usersController = require('./usersController');
 
 // example.com/api/v1/users
-router.get('/users', (req, res) => res.json(usersController.getUsers()));
+router.get('/', (req, res) => res.json(usersController.getUsers()));
 
 // example.com/api/v1/users/1
-router.get('/users/:userId', (req, res) => {
+router.get('/:userId', (req, res) => {
   res.json(usersController.getUser(req.params.userId));
 });
 

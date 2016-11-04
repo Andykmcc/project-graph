@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 /************************************************
  * START IMPORT ENDPOINTS
  */
-const apiV1Router = require('./api/v1/index');
+const apiRouter = require('./api');
 /*
  * END IMPORT ENDPOINTS
  */
@@ -19,7 +19,7 @@ app.use(helmet());
 
 app.use(bodyParser.json())
 
-app.use('/api/v1', apiV1Router);
+app.use('/api', apiRouter);
 /*
  * END APP CONFIG
  */

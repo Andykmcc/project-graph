@@ -3,7 +3,7 @@ const effortController = require('./effortsController');
 const router  = express.Router();
 
 // example.com/api/v1/efforts
-router.get('/efforts', (req, res) => {
+router.get('/', (req, res) => {
   effortController.getEfforts()
     .then((results) => {
       res.json(results);
@@ -14,7 +14,7 @@ router.get('/efforts', (req, res) => {
 });
 
 // example.com/api/v1/efforts/1
-router.post('/efforts', (req, res) => {
+router.post('/', (req, res) => {
   console.log(req);
   effortController.createEffort(req.body)
     .then((results) => {
