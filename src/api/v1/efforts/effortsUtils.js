@@ -26,7 +26,7 @@ function makeParamString (params) {
   return R.reduce((memo, item) => {
     return `${memo} ${item}: {${item}},`
   }, '', params)
-  .replace(/\,$/, "")
+  .replace(/\,$/, '')
   .trim();
 }
 

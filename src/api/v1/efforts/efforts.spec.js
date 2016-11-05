@@ -35,7 +35,7 @@ describe('effortsController', () => {
 
   describe('#createEffort()', () => {
     it('should create a new driver session', (done) => {
-      const effortsPromise = effortsController.createEffort({})
+      const effortsPromise = effortsController.createEffort({title: 'test'})
 
       sinon.assert.calledOnce(driver.session);
 
@@ -44,6 +44,22 @@ describe('effortsController', () => {
 
     it('should return a rejected promise if no params are passed', (done) => {
       const effortsPromise = effortsController.createEffort();
+
+      effortsPromise.catch((error) => {
+        done();
+      });
+    });
+
+    it('should return a rejected promise if an empty object is passed', (done) => {
+      const effortsPromise = effortsController.createEffort({})
+
+      effortsPromise.catch((error) => {
+        done();
+      });
+    });
+
+    it('should return a rejected promise if non-whitelisted params are passed', (done) => {
+      const effortsPromise = effortsController.createEffort({badkey:'bad value'})
 
       effortsPromise.catch((error) => {
         done();

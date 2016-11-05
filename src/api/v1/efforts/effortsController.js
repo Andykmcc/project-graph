@@ -13,11 +13,17 @@ function getEfforts () {
 }
 
 function createEffort (params) {
-  if (params === undefined) {
+  if (!params || R.isEmpty(params)) {
     return Promise.reject(new Error('createEffort requires parameters'));
   };
 
-  const paramsWhiteList = ['title'];
+  const paramsWhiteList = ['title', 'description'];
+  const allValid = R.all(R.flip(R.contains)(paramsWhiteList));
+
+  if (!allValid(R.keys(params))) {
+    return Promise.reject(new Error(`invalid properties, createEffort only accepts ${paramsWhiteList.toString()}`));
+  }
+
   const session = driver.session();
   const processResults = R.curry(effortsUtils.handleSuccess)(session);
   const processError = R.curry(effortsUtils.handleError)(session);
@@ -25,6 +31,7 @@ function createEffort (params) {
 
   return session.run(`
     CREATE (n:Effort {
+      created_at: TIMESTAMP(),
       ${paramString}
     })
     RETURN n
