@@ -19,6 +19,8 @@ app.use(helmet());
 
 app.use(bodyParser.json())
 
+app.use('/static', express.static('assets'));
+
 app.use('/api', apiRouter);
 /*
  * END APP CONFIG
