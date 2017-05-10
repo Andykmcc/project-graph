@@ -9,9 +9,8 @@ function handleSuccess (session, results) {
       /** Below is the approach suggested by the docs but it is hard to test
       /*  since it relies on data being an instance of a class from neo4j-driver
       /*  that is difficult to mock.
-      /*
-      /*  return record.keys.reduce((memo, key) => memo[key] = record.get(key), {});
        */
+      // return record.keys.reduce((memo, key) => memo[key] = record.get(key), {});
     });
   }
   return [];

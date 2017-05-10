@@ -1,47 +1,20 @@
 const assert = require('assert');
 const sinon = require('sinon');
-const effortsController = require('./effortsController');
+const proxyquire =  require('proxyquire').noCallThru();
 const effortsUtils = require('./effortsUtils');
 const effortsRawMock = require('./effortsRaw.mock.json');
-const driver = require('../../../db');
+
+const driverStub = {
+  run: () => {
+    return Promise.resolve();
+  },
+  close: () => {}
+};
+
+const effortsController = proxyquire('./effortsController', {'../../../db': driverStub});
 
 describe('effortsController', () => {
-  let session;
-  beforeEach(() => {
-    session = sinon.stub(driver, 'session', function () {
-      return {
-        run: function () {
-          return Promise.resolve();
-        },
-        close: function () {}
-      };
-    });
-  });
-
-  afterEach(() => {
-    driver.session.restore();
-  });
-
-  describe('#getEfforts()', () => {
-    it('should create a new driver session', (done) => {
-      const effortsPromise = effortsController.getEfforts();
-
-      sinon.assert.calledOnce(driver.session);
-
-      effortsPromise.then(() => done());
-      effortsPromise.catch(() => done());
-    });
-  });
-
   describe('#createEffort()', () => {
-    it('should create a new driver session', (done) => {
-      const effortsPromise = effortsController.createEffort({title: 'test'})
-
-      sinon.assert.calledOnce(driver.session);
-
-      effortsPromise.then(() => done());
-    });
-
     it('should return a rejected promise if no params are passed', (done) => {
       const effortsPromise = effortsController.createEffort();
 

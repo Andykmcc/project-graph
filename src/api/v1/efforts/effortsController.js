@@ -1,3 +1,4 @@
+const uuid = require('uuid/v4');
 const R = require('ramda');
 const effortsUtils = require('./effortsUtils');
 const driver = require('../../../db');
@@ -32,6 +33,7 @@ function createEffort (params) {
   return session.run(`
     CREATE (n:Effort {
       created_at: TIMESTAMP(),
+      id: '${uuid()}',
       ${paramString}
     })
     RETURN n
