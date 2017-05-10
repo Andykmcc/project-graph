@@ -1,5 +1,5 @@
 const assert = require('assert');
-const usersController = require('./usersController');
+const usersController = require('api/v1/users/usersController');
 
 describe('Users', () => {
 

@@ -8,10 +8,10 @@
     "start": "node ./bin/www",
     "start:dev": "node-inspector --web-port=9090 & nodemon --debug ./bin/www",
     "precommit": "npm-run-all --parallel test test:security",
-    "test": "mocha src/**/*.spec.js",
+    "test": "NODE_PATH='./src' mocha --opts ./mocharc test/**/*.spec.js",
     "test:security": "nsp check",
-    "test:watch": "mocha --watch src/**/*.spec.js",
-    "cover": "istanbul cover _mocha src/**/*.spec.js",
+    "test:watch": "NODE_PATH='./src' mocha --watch --opts ./mocharc test/**/*.spec.js",
+    "cover": "NODE_PATH='./src' istanbul cover _mocha --opts ./mocharc test/**/*.spec.js",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "author": "Andy McCoy",
@@ -27,6 +27,8 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "coveralls": "^2.11.14",
     "husky": "^0.13.3",
     "istanbul": "^0.4.5",
