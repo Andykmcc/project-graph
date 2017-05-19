@@ -38,13 +38,7 @@ describe('effortsUtils', () => {
     };
 
     it('should call session.close()', () => {
-      effortsUtils.handleError(session, {});
-      assert(session.close.called);
-    });
-
-    it('should return the error passed in', () => {
-      const err = {msg: 'unique error msg'};
-      assert.deepEqual(err, effortsUtils.handleError(session, err));
+      assert.throws(()=>{effortsUtils.handleError(session, {})}, session.close.called);
     });
   });
 

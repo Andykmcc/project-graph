@@ -21,19 +21,7 @@ function handleError (session, error) {
   throw new Error(error);
 }
 
-// returns a string to be used as a neo4j-driver .run() argument
-// it does not acutally add the values to be written to the DB.
-// e.g. "item1: {item1}, item2: {item2}"
-function makeParamString (params) {
-  return R.reduce((memo, item) => {
-    return `${memo} ${item}: {${item}},`
-  }, '', params)
-  .replace(/\,$/, '') // remove trailing comma
-  .trim(); // remove trailling whitespace
-}
-
 module.exports = {
-  handleSuccess,
   handleError,
-  makeParamString
-}
+  handleSuccess
+};
