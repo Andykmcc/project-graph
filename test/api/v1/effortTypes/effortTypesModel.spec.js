@@ -1,12 +1,12 @@
 const assert = require('assert');
 const effortTypesModel = require('api/v1/effortTypes/effortTypesModel');
-const effortTypesMocks = require('./effortTypes.mock');
+const effortTypesMocks = require('../../../mocks/effortTypes.mock.json');
 
 describe('effortTypeValidator', () => {
   it('should pass when given a valid name and field property', () => {
     const validTypeArgument = {
       name: 'valid name',
-      fields: [effortTypesMocks.validField, {name: 'valid name', type: 'boolean'}]
+      fields: [effortTypesMocks, {name: 'valid name', type: 'boolean'}]
     };
     const result = effortTypesModel.validate(validTypeArgument);
     assert.equal(result.error, null);

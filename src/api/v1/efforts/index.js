@@ -1,27 +1,29 @@
 const express = require('express');
+const R = require('ramda');
 const effortController = require('./effortsController');
-const router  = express.Router();
+const router = express.Router();
 
-// example.com/api/v1/efforts
+// example.com/api/v1/efforts/1
 router.get('/', (req, res) => {
   effortController.getEfforts()
-    .then((results) => {
-      res.json(results);
-    })
+    .then(results => res.json(results))
     .catch((err) => {
-      res.status(500).send({error: err});
+      res.status(500).send({
+        message: err.message,
+        stack: err.stack
+      });
     });
 });
 
-// example.com/api/v1/efforts/1
+// example.com/api/v1/efforts/
 router.post('/', (req, res) => {
-  console.log(req);
   effortController.createEffort(req.body)
-    .then((results) => {
-      res.json(results);
-    })
+    .then(results => res.json(results))
     .catch((err) => {
-      res.status(500).send(err);
+      res.status(500).send({
+        message: err.message,
+        stack: err.stack
+      });
     });
 });
 

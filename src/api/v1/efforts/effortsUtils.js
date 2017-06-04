@@ -1,39 +1,40 @@
 const R = require('ramda');
+const Joi = require('joi');
+const fieldTypes = require('../../../constants/fieldTypes');
 
-function handleSuccess (session, results) {
-  session.close();
-  if (results.records && results.records.length) {
-    return results.records.map(record => {
-      // ref. 'private' member of data to make this method easily testable.
-      return record._fields;
-      /** Below is the approach suggested by the docs but it is hard to test
-      /*  since it relies on data being an instance of a class from neo4j-driver
-      /*  that is difficult to mock.
-       */
-      // return record.keys.reduce((memo, key) => memo[key] = record.get(key), {});
-    });
+function makeJoiSchema (fields, model) {
+  return Joi.object(fields.reduce((memo, fieldName) => {
+    const field = model.find(prop => prop.name === fieldName);
+    if(field){
+      memo[fieldName] = fieldTypes[field.type];
+    }
+    return memo;
+  }, {}));
+}
+
+function transformEffortType (effortType) {
+  const getProperties = R.map(R.prop('properties'));
+  const getNamesTypes = R.map(R.pick(['name', 'type']));
+
+  return R.compose(getNamesTypes, getProperties)(R.flatten(effortType));
+}
+
+function validateEffort (effortParams, effortTypeModel) {
+  const diff = R.difference(Object.keys(effortParams.fields), effortTypeModel.map(prop => prop.name));
+  if (diff.length) {
+    return Promise.reject(new Error(`the following fields are not part of this effort type: ${diff.join(', ')}`));
   }
-  return [];
-}
 
-function handleError (session, error) {
-  session.close();
-  throw new Error(error);
-}
+  const joiSchema = makeJoiSchema(Object.keys(effortParams.fields), effortTypeModel);
+  const validationError = Joi.validate(effortParams.fields, joiSchema, {allowUnknown: false}).error;
 
-// returns a string to be used as a neo4j-driver .run() argument
-// it does not acutally add the values to be written to the DB.
-// e.g. "item1: {item1}, item2: {item2}"
-function makeParamString (params) {
-  return R.reduce((memo, item) => {
-    return `${memo} ${item}: {${item}},`
-  }, '', params)
-  .replace(/\,$/, '') // remove trailing comma
-  .trim(); // remove trailling whitespace
+  if (validationError) {
+    return Promise.reject(new Error(validationError));
+  }
 }
 
 module.exports = {
-  handleSuccess,
-  handleError,
-  makeParamString
-}
+  makeJoiSchema,
+  transformEffortType,
+  validateEffort
+};

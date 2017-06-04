@@ -1,4 +1,5 @@
 const R = require('ramda');
+const driver = require('../db');
 
 function handleSuccess (session, results) {
   session.close();
@@ -21,7 +22,18 @@ function handleError (session, error) {
   throw new Error(error);
 }
 
+function query (queryString, data) {
+  const session = driver.session();
+  const processResults = R.curry(handleSuccess)(session);
+  const processError = R.curry(handleError)(session);
+
+  return session.run(queryString, data)
+    .then(processResults)
+    .catch(processError);
+}
+
 module.exports = {
+  handleSuccess,
   handleError,
-  handleSuccess
+  query
 };

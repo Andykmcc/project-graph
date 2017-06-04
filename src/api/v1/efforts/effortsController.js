@@ -1,46 +1,42 @@
 const uuid = require('uuid/v4');
 const R = require('ramda');
+const neo4jHelpers = require('../../../services/neo4jHelpers');
 const effortsUtils = require('./effortsUtils');
-const driver = require('../../../db');
 
 function getEfforts () {
-  const session = driver.session();
-  const processResults = R.curry(effortsUtils.handleSuccess)(session);
-  const processError = R.curry(effortsUtils.handleError)(session);
-
-  return session.run('MATCH (n:Effort) RETURN n LIMIT 10')
-    .then(processResults)
-    .catch(processError);
+  return neo4jHelpers.query('MATCH (n:Effort) RETURN n LIMIT 25');
 }
 
-function createEffort (params) {
-  if (!params || R.isEmpty(params)) {
-    return Promise.reject(new Error('createEffort requires parameters'));
-  };
-
-  const paramsWhiteList = ['title', 'description'];
-  const allValid = R.all(R.flip(R.contains)(paramsWhiteList));
-
-  if (!allValid(R.keys(params))) {
-    return Promise.reject(new Error(`invalid properties, createEffort only accepts ${paramsWhiteList.toString()}`));
+function createEffort (effortParams) {
+  if (!effortParams || !effortParams.fields || !effortParams.effortType.id) {
+    return Promise.reject('createEffort requires 1 argument');
   }
 
-  const session = driver.session();
-  const processResults = R.curry(effortsUtils.handleSuccess)(session);
-  const processError = R.curry(effortsUtils.handleError)(session);
-  const paramString = effortsUtils.makeParamString(paramsWhiteList);
+  const validateEffort = R.curry(effortsUtils.validateEffort)(effortParams);
 
-  return session.run(`
-    CREATE (n:Effort {
-      created_at: TIMESTAMP(),
-      id: '${uuid()}',
-      ${paramString}
-    })
-    RETURN n
-    `,
-    R.pick(paramsWhiteList, params))
-    .then(processResults)
-    .catch(processError);
+  return neo4jHelpers.query(`
+    MATCH (et:EffortType {
+      id: {id}
+    })-[:HAS_FIELD]->(f:Field)
+    RETURN f
+  `,
+  {
+    id: effortParams.effortType.id
+  })
+  .then(effortsUtils.transformEffortType)
+  .then(validateEffort)
+  .then(() => {
+    const data = {props: Object.assign({}, {id: uuid()}, effortParams.fields)};
+
+    return neo4jHelpers.query(`
+      CREATE (e:Effort {props})
+      SET e.created_at = timestamp()
+      SET e.updated_at = timestamp()
+      RETURN e
+      `,
+      data
+    );
+  });
 }
 
 module.exports = {

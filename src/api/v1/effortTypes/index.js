@@ -5,9 +5,7 @@ const router  = express.Router();
 // example.com/api/v1/efforttypes/87sd987dfs78fd768fds678
 router.delete('/:id', (req, res) => {
   effortTypesController.deleteEffortType(req.params.id)
-    .then((results) => {
-      res.json(results);
-    })
+    .then((results) => res.json(results))
     .catch((err) => {
       res.status(500).json({
         code: err.code,
@@ -19,9 +17,7 @@ router.delete('/:id', (req, res) => {
 // example.com/api/v1/efforttypes/87sd987dfs78fd768fds678
 router.get('/:id', (req, res) => {
   effortTypesController.getEffortType(req.params.id)
-    .then((results) => {
-      res.json(results);
-    })
+    .then((results) => res.json(results))
     .catch((err) => {
       res.status(500).json({
         code: err.code,
@@ -33,9 +29,19 @@ router.get('/:id', (req, res) => {
 // example.com/api/v1/efforttypes
 router.post('/', (req, res) => {
   effortTypesController.createEffortType(req.body)
-    .then((results) => {
-      res.json(results);
-    })
+    .then((results) => res.json(results))
+    .catch((err) => {
+      res.status(500).json({
+        code: err.code,
+        message: err.message
+      });
+    });
+});
+
+// example.com/api/v1/efforttypes
+router.get('/', (req, res) => {
+  effortTypesController.getEffortTypes()
+    .then((results) => res.json(results))
     .catch((err) => {
       res.status(500).json({
         code: err.code,

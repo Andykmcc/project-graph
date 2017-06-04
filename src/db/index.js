@@ -6,12 +6,14 @@ nconf.argv() // command line arguments
   .env() // enviroment variables
   .file(`./config/database.${env}.json`); // config file
 
+const host = nconf.get('HOST');
+const auth = neo4j.auth.basic(
+  nconf.get('USERNAME'),
+  nconf.get('PASSWORD')
+);
 const driver = neo4j.driver(
-  nconf.get('HOST'),
-  neo4j.auth.basic(
-    nconf.get('USERNAME'),
-    nconf.get('PASSWORD')
-  )
+  host,
+  auth
 );
 
 // closes all opened sessions when the process exit. It is just

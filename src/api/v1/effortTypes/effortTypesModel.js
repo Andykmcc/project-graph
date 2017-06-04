@@ -14,7 +14,7 @@ const validator = R.curry(R.flip(Joi.validate));
 const effortTypeSchema = Joi.object().keys({
   name: fieldTypes.title.required(),
   fields: Joi.array().items(fieldModel.schema).required()
-});
+}).required();
 
 module.exports = {
   schema: effortTypeSchema,

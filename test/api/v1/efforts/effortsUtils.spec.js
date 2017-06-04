@@ -1,56 +1,69 @@
 const assert = require('assert');
-const sinon = require('sinon');
 const effortsUtils = require('api/v1/efforts/effortsUtils');
-const effortsRawMock = require('./effortsRaw.mock.json');
+
+const mockEffortTypeProps = [
+  [{
+    properties: {
+      name: 'title',
+      type: 'title'
+    }
+  }],
+  [{
+    properties: {
+      name: 'description',
+      type: 'description'
+    }
+  }]
+];
+const mockEffortTypePropsTransformed = [
+  {name: 'title',type: 'title'},
+  {name: 'description',type: 'description'}
+];
+const mockValidEffortParams = {
+  fields: {
+    title: "working my way through things",
+    description: "kaljsdfkajsdlkfjalsd"
+  }
+};
 
 describe('effortsUtils', () => {
-  describe('#handleSuccess()', () => {
-    const session = {
-      close: sinon.spy()
-    };
+  describe('#transformEffortType', () => {
+    const result = effortsUtils.transformEffortType(mockEffortTypeProps);
 
-    it('should call session.close()', () => {
-      effortsUtils.handleSuccess(session, effortsRawMock);
-      assert(session.close.called);
-    });
-
-    it('should return an empty array when no results are found', () => {
-      assert.equal(true, Array.isArray(effortsUtils.handleSuccess(session, [])));
-      assert.equal(0, effortsUtils.handleSuccess(session, []).length);
-    });
-
-    it('should return an array of collections when data found', () => {
-      assert.equal(true, Array.isArray(effortsUtils.handleSuccess(session, effortsRawMock)));
-    });
-
-    it('should return an array of collections where each objects has a "labels" property', () => {
-      assert(effortsUtils.handleSuccess(session, effortsRawMock)[0][0].labels);
-    });
-
-    it('should return an array of collections where each objects has a "properties" property', () => {
-      assert(effortsUtils.handleSuccess(session, effortsRawMock)[0][0].properties);
+    it('should return a collection of property objects', () => {
+      assert.deepEqual(result, mockEffortTypePropsTransformed);
     });
   });
 
-  describe('#handleError()', () => {
-    const session = {
-      close: sinon.spy()
-    };
+  describe('#validateEffort', () => {
+    it('should return "undefined" if all is well', () => {
+      const result = effortsUtils.validateEffort(mockValidEffortParams, mockEffortTypePropsTransformed);
+      assert.equal(result, undefined);
+    });
 
-    it('should call session.close()', () => {
-      assert.throws(()=>{effortsUtils.handleError(session, {})}, session.close.called);
+    it('should return a rejected promise if params are not part of the effort type', (done) => {
+      const rejected = effortsUtils.validateEffort({fields: {invalidKey: 'value'}}, mockEffortTypePropsTransformed);
+
+      rejected.catch(() => done());
+    });
+
+    it('should reject a promise if validation fails', (done) => {
+      const invalidParams = {
+        fields: {
+          title: false,
+          description: "kaljsdfkajsdlkfjalsd"
+        }
+      };
+      const rejected = effortsUtils.validateEffort(invalidParams, mockEffortTypePropsTransformed);
+      rejected.catch(() => done());
     });
   });
 
-  describe('#makeParamString()', () => {
-    it('should not have a trailing comma (,)', () => {
-      const result = effortsUtils.makeParamString(['key1', 'key2']);
-      assert(result[result.length - 1] !== ',');
-    });
-    it('should contain each key twice', () => {
-      const result = effortsUtils.makeParamString(['dog', 'cat']);
-      assert((result.match(/cat/g)).length === 2);
-      assert((result.match(/dog/g)).length === 2);
+  describe('#makeJoiSchema', () => {
+    it('should return a joi schema', () => {
+      const keys = Object.keys(mockValidEffortParams.fields);
+      const result = effortsUtils.makeJoiSchema(keys, mockEffortTypePropsTransformed);
+      assert(result.isJoi);
     });
   });
 });

@@ -1,23 +1,28 @@
 const proxyquire =  require('proxyquire').noCallThru();
 const chai = require('chai');
-// https://www.npmjs.com/package/chai-as-promised
 const chaiAsPromised = require('chai-as-promised');
 
 chai.use(chaiAsPromised);
 chai.should();
 
-const driverStub = {
-  session: () => {
-    return {
-      run: () => {
-        return Promise.resolve({records: [{_fields: [0,1,2]}]});
-      },
-      close: () => {}
-    }
-  }
+const neo4jHelpersStub = {
+  query: () => Promise.resolve([
+    [{
+      properties: {
+        name: 'description',
+        type: 'description'
+      }
+    }],
+    [{
+      properties: {
+        name: 'title',
+        type: 'title'
+      }
+    }]
+  ])
 };
 
-const effortsController = proxyquire('api/v1/efforts/effortsController', {'../../../db': driverStub});
+const effortsController = proxyquire('api/v1/efforts/effortsController', {'../../../services/neo4jHelpers': neo4jHelpersStub});
 
 describe('effortsController', () => {
   describe('#createEffort()', () => {
@@ -27,7 +32,7 @@ describe('effortsController', () => {
       return effortsPromise.should.be.rejected;
     });
 
-    it('should return a rejected promise if an empty object is passed', () => {
+    it('should return a rejected promise if no fields are passed', () => {
       const effortsPromise = effortsController.createEffort({});
 
       return effortsPromise.should.be.rejected;
@@ -41,20 +46,19 @@ describe('effortsController', () => {
 
     describe('when passed a title and description', () => {
       const validOptions = {
-        title: 'test title 1',
-        description: 'test description 1'
+        effortType: {
+          id: '62dd1dbb-7bb6-40fb-8d80-0f26d3cc47a2'
+        },
+        fields: {
+          title: 'title 1',
+          description: 'description 1'
+        }
       };
 
       it('should return a promise', () => {
         const effortsPromise = effortsController.createEffort(validOptions);
 
         return effortsPromise.should.be.fulfilled;
-      });
-
-      it('should return a promise with an collection of record\'s with their _fields', () => {
-        const effortsPromise = effortsController.createEffort(validOptions);
-
-        return effortsPromise.should.eventually.deep.equal([[0,1,2]]);
       });
     })
   });

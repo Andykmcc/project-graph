@@ -1,11 +1,13 @@
 const Joi = require('joi');
 
 const supportedFieldTypes = {
-  title: Joi.string().min(3).max(256),
+  boolean: Joi.boolean(),
+  date: Joi.string().isoDate(),
   description: Joi.string().min(1),
-  number: Joi.number(),
   email: Joi.string().email(),
-  boolean: Joi.boolean()
+  number: Joi.number(),
+  title: Joi.string().min(3).max(256),
+  url: Joi.string().uri()
 };
 
 module.exports = supportedFieldTypes;

@@ -1,3 +1,4 @@
 --slow
 --timeout
 --check-leaks
+--recursive

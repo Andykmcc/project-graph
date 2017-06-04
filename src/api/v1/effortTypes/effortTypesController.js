@@ -1,50 +1,49 @@
 const uuid = require('uuid/v4');
 const R = require('ramda');
 const Joi = require('joi');
-const driver = require('../../../db');
-const effortTypesUtils = require('./effortTypesUtils');
+const neo4jHelpers = require('../../../services/neo4jHelpers');
 const effortTypesModel = require('./effortTypesModel');
 
 function deleteEffortType (effortTypeID) {
-  const validationError = Joi.validate(effortTypeID, Joi.string().guid({version: ['uuidv4']})).error;
+  const validationError = Joi.validate(effortTypeID, Joi.string().guid({version: ['uuidv4']}).required()).error;
   if (validationError) {
     return Promise.reject(new Error(validationError));
   }
 
-  const session = driver.session();
-  const processResults = R.curry(effortTypesUtils.handleSuccess)(session);
-  const processError = R.curry(effortTypesUtils.handleError)(session);
-
-  return session.run(`
+  return neo4jHelpers.query(`
     MATCH (e:EffortType {
       id: {id}
     })-[:HAS_FIELD]->(f:Field)
     DETACH DELETE e, f
     `,
-    {id: effortTypeID})
-  .then(processResults)
-  .catch(processError);
+    {id: effortTypeID}
+  );
 }
 
 function getEffortType (effortTypeID) {
-  const validationError = Joi.validate(effortTypeID, Joi.string().guid({version: ['uuidv4']})).error;
+  const validationError = Joi.validate(effortTypeID, Joi.string().guid({version: ['uuidv4']}).required()).error;
   if (validationError) {
     return Promise.reject(new Error(validationError));
   }
 
-  const session = driver.session();
-  const processResults = R.curry(effortTypesUtils.handleSuccess)(session);
-  const processError = R.curry(effortTypesUtils.handleError)(session);
-
-  return session.run(`
+  return neo4jHelpers.query(`
     MATCH (e:EffortType {
       id: {id}
     })-[:HAS_FIELD]->(f:Field)
     RETURN e, f
+    LIMIT 1
     `,
-    {id: effortTypeID})
-  .then(processResults)
-  .catch(processError);
+    {id: effortTypeID}
+  );
+}
+
+function getEffortTypes () {
+  return neo4jHelpers.query(`
+    MATCH (e:EffortType)-[:HAS_FIELD]->(:Field)
+    RETURN e
+    LIMIT 25
+    `
+  );
 }
 
 function createEffortType (newEffortType) {
@@ -53,11 +52,7 @@ function createEffortType (newEffortType) {
     return Promise.reject(new Error(validationError));
   }
 
-  const session = driver.session();
-  const processResults = R.curry(effortTypesUtils.handleSuccess)(session);
-  const processError = R.curry(effortTypesUtils.handleError)(session);
-
-  return session.run(`
+  return neo4jHelpers.query(`
     CREATE (e:EffortType {
       created_at: TIMESTAMP(),
       id: '${uuid()}',
@@ -72,13 +67,13 @@ function createEffortType (newEffortType) {
     })
     RETURN e, f
     `,
-    newEffortType)
-  .then(processResults)
-  .catch(processError);
+    newEffortType
+  );
 }
 
 module.exports = {
   createEffortType,
   deleteEffortType,
-  getEffortType
+  getEffortType,
+  getEffortTypes
 }
