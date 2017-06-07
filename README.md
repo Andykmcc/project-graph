@@ -20,7 +20,7 @@ This assumes you have NodeJS and Neo4j installed. I suggest installing Node via 
 
 * Install [Neo4j](https://neo4j.com/download/community-edition/)
 * Start Neo4j, set a new password for the `neo4j` user.
-* Make a copy of the file `/src/config/database.example.json` and name it `database.development.json`
+* Make a copy of the file `/config/database.example.json` and name it `database.development.json`
 * Change the value in the password field to match what you set in your local Neo4j.
 
 
