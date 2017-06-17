@@ -82,9 +82,7 @@ describe('neo4jHelpers', () => {
       };
 
       const neo4jHelpers = proxyquire('services/neo4jHelpers', {'../db': driverMock});
-      neo4jHelpers.query(queryString, data).catch((err)=>{
-        console.log(err);
-      });
+      neo4jHelpers.query(queryString, data);
     });
 
     it('should create a new DB driver session', () => {

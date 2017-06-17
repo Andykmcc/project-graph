@@ -19,14 +19,14 @@ function transformEffortType (effortType) {
   return R.compose(getNamesTypes, getProperties)(R.flatten(effortType));
 }
 
-function validateEffort (effortParams, effortTypeModel) {
-  const diff = R.difference(Object.keys(effortParams.fields), effortTypeModel.map(prop => prop.name));
+function validateEffortFields (effortFields, effortTypeModel) {
+  const diff = R.difference(Object.keys(effortFields), effortTypeModel.map(prop => prop.name));
   if (diff.length) {
     return Promise.reject(new Error(`the following fields are not part of this effort type: ${diff.join(', ')}`));
   }
 
-  const joiSchema = makeJoiSchema(Object.keys(effortParams.fields), effortTypeModel);
-  const validationError = Joi.validate(effortParams.fields, joiSchema, {allowUnknown: false}).error;
+  const joiSchema = makeJoiSchema(Object.keys(effortFields), effortTypeModel);
+  const validationError = Joi.validate(effortFields, joiSchema, {allowUnknown: false}).error;
 
   if (validationError) {
     return Promise.reject(new Error(validationError));
@@ -36,5 +36,5 @@ function validateEffort (effortParams, effortTypeModel) {
 module.exports = {
   makeJoiSchema,
   transformEffortType,
-  validateEffort
+  validateEffortFields
 };

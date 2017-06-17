@@ -1,6 +1,7 @@
 const uuid = require('uuid/v4');
 const R = require('ramda');
 const neo4jHelpers = require('../../../services/neo4jHelpers');
+const relationshipsService = require('../../../services/relationships');
 const effortsUtils = require('./effortsUtils');
 
 function getEfforts () {
@@ -8,11 +9,16 @@ function getEfforts () {
 }
 
 function createEffort (effortParams) {
-  if (!effortParams || !effortParams.fields || !effortParams.effortType.id) {
-    return Promise.reject('createEffort requires 1 argument');
+  if (!effortParams ||
+      !effortParams.fields ||
+      !effortParams.effortType ||
+      !effortParams.effortType.id ||
+      !effortParams.relationships ||
+      R.isEmpty(effortParams.relationships)) {
+    return Promise.reject(new Error('createEffort requires "fields", "effortType.id", "relationships"'));
   }
 
-  const validateEffort = R.curry(effortsUtils.validateEffort)(effortParams);
+  const validateEffortFields = R.curry(effortsUtils.validateEffortFields)(effortParams.fields);
 
   return neo4jHelpers.query(`
     MATCH (et:EffortType {
@@ -24,9 +30,15 @@ function createEffort (effortParams) {
     id: effortParams.effortType.id
   })
   .then(effortsUtils.transformEffortType)
-  .then(validateEffort)
+  .then(validateEffortFields)
   .then(() => {
-    const data = {props: Object.assign({}, {id: uuid()}, effortParams.fields)};
+    const data = {
+      props: Object.assign(
+        {},
+        {id: uuid()},
+        effortParams.fields
+      )
+    };
 
     return neo4jHelpers.query(`
       CREATE (e:Effort {props})
@@ -36,6 +48,15 @@ function createEffort (effortParams) {
       `,
       data
     );
+  })
+  .then((effort) => {
+    const newEffortId = effort[0][0]['properties']['id'];
+    const setObjectId = R.set(R.lensProp('objectId'), newEffortId);
+    const createRelsPromises = effortParams.relationships
+      .map(setObjectId)
+      .map(relationshipsService.createRelationship);
+
+    return Promise.all(createRelsPromises);
   });
 }
 
