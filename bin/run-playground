@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+'use strict';
+
+const repl = require('repl');
+const playground = require('../src/cli/playground');
+
+const ctx = repl.start().context;
+Object.assign(ctx, playground);
