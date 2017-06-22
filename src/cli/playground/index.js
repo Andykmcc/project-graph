@@ -1,10 +1,7 @@
-'use strict';
-
-const { resolve } = require('path');
-const apiBase     = resolve(__dirname, '..', '..', 'api', 'v1');
-const efforts     = require(resolve(apiBase, 'efforts', 'effortsController'));
-const effortTypes = require(resolve(apiBase, 'effortTypes', 'effortTypesController'));
-const users       = require(resolve(apiBase, 'users', 'usersController'));
+const apiBase     = '../../api/v1/';
+const efforts     = require(`${apiBase}efforts/effortsController`);
+const effortTypes = require(`${apiBase}effortTypes/effortTypesController`);
+const users       = require(`${apiBase}users/usersController`);
 const { methods } = require('./lib');
 
 module.exports = {

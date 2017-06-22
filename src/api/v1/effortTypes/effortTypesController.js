@@ -3,11 +3,12 @@ const R = require('ramda');
 const Joi = require('joi');
 const neo4jHelpers = require('../../../services/neo4jHelpers');
 const effortTypesModel = require('./effortTypesModel');
+const exceptionHandler = require('../../../services/exceptionHandler');
 
 function deleteEffortType (effortTypeID) {
   const validationError = Joi.validate(effortTypeID, Joi.string().guid({version: ['uuidv4']}).required()).error;
   if (validationError) {
-    return Promise.reject(new Error(validationError));
+    return Promise.reject(exceptionHandler.joiToBoom(validationError));
   }
 
   return neo4jHelpers.query(`
@@ -23,7 +24,7 @@ function deleteEffortType (effortTypeID) {
 function getEffortType (effortTypeID) {
   const validationError = Joi.validate(effortTypeID, Joi.string().guid({version: ['uuidv4']}).required()).error;
   if (validationError) {
-    return Promise.reject(new Error(validationError));
+    return Promise.reject(exceptionHandler.joiToBoom(validationError));
   }
 
   return neo4jHelpers.query(`
@@ -49,7 +50,7 @@ function getEffortTypes () {
 function createEffortType (newEffortType) {
   const validationError = effortTypesModel.validate(newEffortType).error
   if (validationError) {
-    return Promise.reject(new Error(validationError));
+    return Promise.reject(exceptionHandler.joiToBoom(validationError));
   }
 
   return neo4jHelpers.query(`

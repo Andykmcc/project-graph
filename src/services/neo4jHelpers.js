@@ -1,4 +1,5 @@
 const R = require('ramda');
+const Boom = require('boom');
 const driver = require('../db');
 
 function handleSuccess (session, results) {
@@ -19,7 +20,13 @@ function handleSuccess (session, results) {
 
 function handleError (session, error) {
   session.close();
-  throw new Error(error);
+  switch(error.code) {
+    case 'ServiceUnavailable':
+      throw Boom.serverUnavailable(error.message, error.stack);
+      break;
+    default:
+      throw Boom.create(400, error.message, error.stack);
+  }
 }
 
 function query (queryString, data) {
