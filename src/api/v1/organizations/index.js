@@ -1,5 +1,5 @@
 const express = require('express');
-const Controller = require('./organizationsController');
+const organizationsController = require('./organizationsController');
 const router  = express.Router();
 
 // example.com/api/v1/organizations/87sd987dfs78fd768fds678
@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
 
 // example.com/api/v1/organizations
 router.get('/', (req, res) => {
-  organizationsController.getorganizations()
+  organizationsController.getOrganizations()
     .then((results) => res.json(results))
     .catch((err) => {
       res.status(500).json({

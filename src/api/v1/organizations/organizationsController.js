@@ -65,7 +65,7 @@ function createOrganization (organization) {
     })
     RETURN o
     `,
-    organiaztion 
+    organization 
   );
 }
 
@@ -73,5 +73,5 @@ module.exports = {
   createOrganization, 
   deleteOrganization, 
   getOrganization, 
-  getorganizations
+  getOrganizations
 }
