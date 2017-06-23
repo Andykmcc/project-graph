@@ -4,7 +4,6 @@ const Joi = require('joi');
 const neo4jHelpers = require('../../../services/neo4jHelpers');
 const organizationsModel = require('./organizationsModel');
 
-// TODO: Test
 function deleteOrganization (organizationID) {
   const validationError = Joi.validate(organizationID, Joi.string().guid({version: ['uuidv4']}).required()).error;
   if (validationError) {
@@ -21,7 +20,6 @@ function deleteOrganization (organizationID) {
   );
 }
 
-// TODO: Test
 function getOrganization (organizationID) {
   const validationError = Joi.validate(organizationID, Joi.string().guid({version: ['uuidv4']}).required()).error;
   if (validationError) {
@@ -39,7 +37,6 @@ function getOrganization (organizationID) {
   );
 }
 
-// TODO: Test
 function getOrganizations () {
   return neo4jHelpers.query(`
     MATCH (o:Organization)
@@ -49,7 +46,6 @@ function getOrganizations () {
   );
 }
 
-// TODO: Test
 function createOrganization (organization) {
   const validationError = organizationsModel.validate(organization).error
   if (validationError) {

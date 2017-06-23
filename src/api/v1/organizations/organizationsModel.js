@@ -9,7 +9,6 @@ const validFieldTypes = Object.keys(fieldTypes);
 const validator = R.curry(R.flip(Joi.validate));
 
 // The schema for the main Organization node.
-// The god node?
 const organizationSchema = Joi.object().keys({
   name: fieldTypes.title.required(),
   description: fieldTypes.description.required()
