@@ -1,9 +1,15 @@
+const neo4j = require('neo4j-driver').v1
 const assert = require('assert');
 const sinon = require('sinon');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const proxyquire =  require('proxyquire').noCallThru();
 const effortsRawMock = require('../mocks/effortsRaw.mock.json');
+
+const Record = neo4j.types.Record;
+const results = {
+  records: effortsRawMock.records.map(rec => new Record(rec.keys, rec._fields, rec._fieldLookup))
+};
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -22,25 +28,16 @@ describe('neo4jHelpers', () => {
     });
 
     it('should call session.close()', () => {
-      neo4jHelpers.handleSuccess(session, effortsRawMock);
+      neo4jHelpers.handleSuccess(session, results);
       assert(session.close.called);
     });
 
     it('should return an empty array when no results are found', () => {
-      assert.equal(true, Array.isArray(neo4jHelpers.handleSuccess(session, [])));
-      assert.equal(0, neo4jHelpers.handleSuccess(session, []).length);
+      assert.equal(0, neo4jHelpers.handleSuccess(session, {records: []}).length);
     });
 
-    it('should return an array of collections when data found', () => {
-      assert.equal(true, Array.isArray(neo4jHelpers.handleSuccess(session, effortsRawMock)));
-    });
-
-    it('should return an array of collections where each objects has a "labels" property', () => {
-      assert(neo4jHelpers.handleSuccess(session, effortsRawMock)[0][0].labels);
-    });
-
-    it('should return an array of collections where each objects has a "properties" property', () => {
-      assert(neo4jHelpers.handleSuccess(session, effortsRawMock)[0][0].properties);
+    it('should return an array when data found', () => {
+      assert(Array.isArray(neo4jHelpers.handleSuccess(session, results)));
     });
   });
 
