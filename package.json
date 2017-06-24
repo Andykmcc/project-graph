@@ -5,8 +5,8 @@
   "repository": "https://github.com/Andykmcc/project-graph",
   "main": "./bin/www",
   "scripts": {
-    "start": "node ./bin/www",
-    "start:dev": "nodemon --inspect=0.0.0.0:9229 ./bin/www",
+    "start:prod": "node ./bin/www",
+    "start": "nodemon --inspect=0.0.0.0:9229 ./bin/www",
     "playground": "node ./bin/run-playground",
     "precommit": "npm-run-all --parallel test test:security",
     "test": "NODE_ENV=testing NODE_PATH='./src' mocha",

@@ -23,8 +23,9 @@ This assumes you have NodeJS and Neo4j installed. I suggest installing Node via 
 * Make a copy of the file `/config/database.example.json` and name it `database.development.json`
 * Change the value in the password field to match what you set in your local Neo4j.
 
-
 ## Usage
 
-1. `npm run start:dev`
-2. In another terminal run `curl 'http://localhost:8080/api/v1/efforts'` to test the API
+* Run `npm start`
+* In another terminal run `curl 'http://localhost:8080/api/v1/efforts'` to test the API
+* The terminal will return a url beginning with `chrome-devtools://devtools/bundled/inspector.html`, copy the complete url into chrome to debug the node process with the Chrome DevTools. I recommend install the [node inspector manager](https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj?hl=en-US) to have a much more pleasant debugging experience.
+* I recommend install [Insomnia](https://insomnia.rest/) or [Postman](https://www.getpostman.com/) unless you are a CuRL expert.
