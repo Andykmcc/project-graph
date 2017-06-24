@@ -1,65 +1,33 @@
-// TODO: I have not touched this yet...
 const assert = require('assert');
-const effortTypesModel = require('api/v1/effortTypes/effortTypesModel');
-const effortTypesMocks = require('../../../mocks/effortTypes.mock.json');
+const organizationsModel = require('api/v1/organizations/organizationsModel');
 
-describe('effortTypeValidator', () => {
-  it('should pass when given a valid name and field property', () => {
-    const validTypeArgument = {
+// We are not currently using this. Could consider refactoring so that we are.
+// const organizationsMocks = require('../../../mocks/organizations.mock.json');
+
+describe('organizationValidator', () => {
+  it('should pass when given a valid name and description property', () => {
+    const validOrganizationArgument = {
       name: 'valid name',
-      fields: [effortTypesMocks, {name: 'valid name', type: 'boolean'}]
+      description: 'valid description'
     };
-    const result = effortTypesModel.validate(validTypeArgument);
+    const result = organizationsModel.validate(validOrganizationArgument);
     assert.equal(result.error, null);
   });
 
   it('should fail validation when given an object without a name property', () => {
-    const invalidTypeArgument = {
-      fields: [effortTypesMocks.validField, {name: 'valid name', type: 'boolean'}]
+    const invalidOrganizationArgument = {
+      description: 'valid description' 
     };
-    const result = effortTypesModel.validate(invalidTypeArgument);
+    const result = organizationsModel.validate(invalidOrganizationArgument);
     assert.notEqual(result.error, null);
   });
 
-  it('should fail validation when given an object containing invalid fields property', () => {
-    const invalidTypeArgument = {
-      name: 'valid name',
-      fields: [effortTypesMocks.validField, {name: 'valid name', type: 'invalid'}]
+  it('should fail validation when given an object without a description property', () => {
+     const invalidOrganizationArgument = {
+      name: 'valid name' 
     };
-    const result = effortTypesModel.validate(invalidTypeArgument);
+    const result = organizationsModel.validate(invalidOrganizationArgument);
     assert.notEqual(result.error, null);
   });
 
-  it('should fail validation when given an object without a fields property', () => {
-    const invalidTypeArgument = {
-      name: 'valid name'
-    };
-    const result = effortTypesModel.validate(invalidTypeArgument);
-    assert.notEqual(result.error, null);
-  });
-
-  it('should fail when given an object missing a name property', () => {
-    const invalidFieldArgument = {
-      type: 'string'
-    };
-    const result = effortTypesModel.validate(invalidFieldArgument);
-    assert.notEqual(result.error, null);
-  });
-
-  it('should fail when given an object missing a type', () => {
-    const invalidFieldArgument = {
-      name: 'valid name'
-    };
-    const result = effortTypesModel.validate(invalidFieldArgument);
-    assert.notEqual(result.error, null);
-  });
-
-  it('should fail when given an object with an invalid type', () => {
-    const invalidFieldArgument = {
-      name: 'valid name',
-      type: 'invalid type'
-    };
-    const result = effortTypesModel.validate(invalidFieldArgument);
-    assert.notEqual(result.error, null);
-  });
 });

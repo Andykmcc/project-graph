@@ -1,0 +1,8 @@
+stuff im doing....
+
+1.) create the org
+create (org:Organization {name: "Test Org", 
+id:  "6faadd6b-d257-4f5e-a8aa-ee1adac18bc5"
+}) return org
+
+2.) use the api to create an effort type and an effort.

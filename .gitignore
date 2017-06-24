@@ -4,3 +4,6 @@ npm-debug.log
 coverage
 database
 database.development.json
+
+# Ignore vim .swp files. #
+*.swp
