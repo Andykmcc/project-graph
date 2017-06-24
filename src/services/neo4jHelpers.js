@@ -4,9 +4,7 @@ const driver = require('../db');
 
 function handleSuccess (session, results) {
   session.close();
-  return results.records.map(record => {
-    return record.keys.reduce((memo, key) => memo[key] = record.get(key), {});
-  });
+  return results.records.map(record => record.toObject().n);
 }
 
 function handleError (session, error) {
