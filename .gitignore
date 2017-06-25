@@ -6,4 +6,4 @@ database
 database.development.json
 
 # Ignore vim .swp files. #
-*.swp
+.swp
