@@ -1,6 +1,7 @@
 const assert = require('assert');
 const proxyquire =  require('proxyquire').noCallThru();
 const sinon = require('sinon');
+const R = require('ramda');
 
 let queryResolve;
 let effortTypesController;
@@ -71,13 +72,8 @@ describe('effortTypesController', () => {
 
   describe('#createEffortType', () => {
     const validEffortType = {
-      name: 'Epic',
-      fields: [
-        {
-          name: 'title',
-          type: 'title'
-        }
-      ]
+      name: 'epic',
+      title: 'title'
     };
 
     it('should return a rejected promise when called without a parameter', (done) => {
@@ -85,11 +81,7 @@ describe('effortTypesController', () => {
     });
 
     it('should return a rejected promise when called without a "name" property', (done) => {
-      effortTypesController.createEffortType({fields: validEffortType.fields}).catch(() => done());
-    });
-
-    it('should return a rejected promise when called without a "fields" property', (done) => {
-      effortTypesController.createEffortType({name: 'valid name'}).catch(() => done());
+      effortTypesController.createEffortType({title: 'title'}).catch(() => done());
     });
 
     it('should return a promise when called with a valid effortType', (done) => {
@@ -100,7 +92,36 @@ describe('effortTypesController', () => {
       const queryPromise = effortTypesController.createEffortType(validEffortType);
       const secondArgPassedToQuery = queryResolve.query.getCall(0).args[1];
 
-      assert.deepEqual(secondArgPassedToQuery, validEffortType);
+      assert(secondArgPassedToQuery.data.name === validEffortType.name, 'name prop mismatch');
+      assert(secondArgPassedToQuery.data.title === validEffortType.title, 'title prop mismatch');
+    });
+  });
+
+  describe('#getEffortTypeSchema', () => {
+    describe('when given a valid effort', () => {
+      const validEffortType = {
+        name: 'epic',
+        title: 'title'
+      };
+      it('should return an object with keys matching those of the object passed in', () => {
+        const schema = effortTypesController.getEffortTypeSchema(validEffortType);
+        assert.deepStrictEqual(Object.keys(validEffortType), Object.keys(schema));
+      });
+      it('should return a joi predicate for each value in the schema', () => {
+        const values = Object.values(effortTypesController.getEffortTypeSchema(validEffortType));
+        const isJoi = (item) => item.isJoi;
+        assert(R.all(isJoi, values));
+      });
+    });
+
+    describe('when given an invalid effort', () => {
+      const invalidEffortType = {
+        name: 'epic',
+        title: 'invalid'
+      };
+      it('should throw', () => {
+        assert.throws(() => Object.values(effortTypesController.getEffortTypeSchema(invalidEffortType)));
+      });
     });
   });
 });
