@@ -49,14 +49,7 @@ function getEffortTypes () {
 }
 
 function createEffortType (newEffortType) {
-  let schema;
-  try {
-    schema = Joi.object().keys(getEffortTypeSchema(newEffortType)).required();
-  } catch (err) {
-    return Promise.reject(err);
-  }
-
-  const validationError = Joi.validate(newEffortType, schema).error;
+  const validationError = Joi.validate(newEffortType, getEffortTypeSchema(newEffortType)).error;
   if (validationError) {
     return Promise.reject(exceptionHandler.joiToBoom(validationError));
   }
@@ -72,20 +65,12 @@ function createEffortType (newEffortType) {
 
 function getEffortTypeSchema (effort) {
   const baseEffortType = { name: fieldTypes.title.required() };
-  const schema = Object.entries(R.omit(Object.keys(baseEffortType), effort))
-    .reduce((memo, [key, value]) => {
-      memo[key] = fieldTypes[value]
-      return memo;
-    }, Object.assign({}, baseEffortType));
 
-  if(!Object.keys(R.omit(Object.keys(baseEffortType), effort)).length) {
-    throw Boom.badRequest('getEffortTypeSchema require an effort object');
-  } else if (!R.all(R.compose(R.not, R.isNil))(Object.values(schema))) {
-    const invalidEntries = R.pickAll(Object.keys(R.filter(R.isNil, schema)), effort);
-    throw Boom.badRequest('the following entries have invalid effortType fields', invalidEntries);
-  } else {
-    return schema;
-  }
+  return Joi.object().keys(Object.entries(R.omit(Object.keys(baseEffortType), effort))
+    .reduce((memo, [key, value]) => {
+      memo[key] = Joi.only(Object.keys(fieldTypes))
+      return memo;
+    }, Object.assign({}, baseEffortType))).required();
 }
 
 module.exports = {

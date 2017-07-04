@@ -2,6 +2,7 @@ const assert = require('assert');
 const proxyquire =  require('proxyquire').noCallThru();
 const sinon = require('sinon');
 const R = require('ramda');
+const Joi = require('joi');
 
 let queryResolve;
 let effortTypesController;
@@ -103,24 +104,11 @@ describe('effortTypesController', () => {
         name: 'epic',
         title: 'title'
       };
-      it('should return an object with keys matching those of the object passed in', () => {
-        const schema = effortTypesController.getEffortTypeSchema(validEffortType);
-        assert.deepStrictEqual(Object.keys(validEffortType), Object.keys(schema));
-      });
-      it('should return a joi predicate for each value in the schema', () => {
-        const values = Object.values(effortTypesController.getEffortTypeSchema(validEffortType));
-        const isJoi = (item) => item.isJoi;
-        assert(R.all(isJoi, values));
-      });
-    });
 
-    describe('when given an invalid effort', () => {
-      const invalidEffortType = {
-        name: 'epic',
-        title: 'invalid'
-      };
-      it('should throw', () => {
-        assert.throws(() => Object.values(effortTypesController.getEffortTypeSchema(invalidEffortType)));
+      it('should return a joi validation schema for what was passed in', () => {
+        const schema = effortTypesController.getEffortTypeSchema(validEffortType);
+
+        assert.strictEqual(Joi.validate(validEffortType, schema).error, null);
       });
     });
   });
