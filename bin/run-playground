@@ -2,7 +2,10 @@
 'use strict';
 
 const repl = require('repl');
+const { join } = require('path');
+const history = require('repl.history');
 const playground = require('../src/cli/playground');
 
-const ctx = repl.start().context;
-Object.assign(ctx, playground);
+const instance = repl.start();
+history(instance, join(process.env.HOME, '.node_repl_history'));
+Object.assign(instance.context, playground);

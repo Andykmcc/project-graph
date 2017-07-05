@@ -1,13 +1,18 @@
+'use strict';
 const R = require('ramda');
 const Boom = require('boom');
 const driver = require('../db');
 
-function handleSuccess (session, results) {
+function handleSuccess (session, results, returnKey/*: ?string*/) {
   session.close();
-  return results.records.map(record => record.toObject().n);
+  const r = results.records.map(record => {
+    const obj = record.toObject();
+    return typeof returnKey === 'string' ? obj[returnKey] : obj;
+  });
+  return r;
 }
 
-function handleError (session, error) {
+function handleError (session, error/*: Error*/) {
   session.close();
   switch(error.code) {
     case 'ServiceUnavailable':
@@ -18,9 +23,13 @@ function handleError (session, error) {
   }
 }
 
-function query (queryString, data) {
+function query(queryString/*: string*/
+              , data/*: {[key: string]: mixed}*/
+              , returnKey/*: ?string*/)/*: Promise<mixed>*/ {
   const session = driver.session();
-  const processResults = R.curry(handleSuccess)(session);
+  const processResults = function (results) {
+    return handleSuccess(session, results, returnKey);
+  };
   const processError = R.curry(handleError)(session);
 
   return session.run(queryString, data)

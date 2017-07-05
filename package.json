@@ -27,6 +27,7 @@
     "nconf": "^0.8.4",
     "neo4j-driver": "^1.1.0-M02",
     "ramda": "^0.24.1",
+    "repl.history": "^0.1.4",
     "uuid": "^3.0.1"
   },
   "devDependencies": {

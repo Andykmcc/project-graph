@@ -43,7 +43,9 @@ function getEffortTypes () {
     MATCH (e:EffortType)-[:HAS_FIELD]->(:Field)
     RETURN e
     LIMIT 25
-    `
+    `,
+    {},
+    'e'
   );
 }
 
