@@ -1,5 +1,6 @@
 const uuid = require('uuid/v4');
 const R = require('ramda');
+const Boom = require('boom');
 const neo4jHelpers = require('../../../services/neo4jHelpers');
 const relationshipsService = require('../../../services/relationships');
 const effortsUtils = require('./effortsUtils');
@@ -15,7 +16,7 @@ function createEffort (effortParams) {
       !effortParams.effortType.id ||
       !effortParams.relationships ||
       R.isEmpty(effortParams.relationships)) {
-    return Promise.reject(new Error('createEffort requires "fields", "effortType.id", "relationships"'));
+    return Promise.reject(Boom.badRequest('createEffort requires "fields", "effortType.id", "relationships"'));
   }
 
   const validateEffortFields = R.curry(effortsUtils.validateEffortFields)(effortParams.fields);

@@ -2,6 +2,7 @@ const Joi = require('joi');
 const R = require('ramda');
 const neo4jHelpers = require('./neo4jHelpers');
 const relationshipsModel = require('./relationshipsModel');
+const exceptionHandler = require('./exceptionHandler');
 
 /**
  * @param  {Object} This is the mapping of the relationship
@@ -13,10 +14,10 @@ const relationshipsModel = require('./relationshipsModel');
  * @return {Object} Promise
  */
 function createRelationship (relationship) {
-  const error = relationshipsModel.validate(relationship).error;
+  const validationError = relationshipsModel.validate(relationship).error;
 
-  if (error) {
-    return Promise.reject(new Error(error));
+  if (validationError) {
+    return Promise.reject(exceptionHandler.joiToBoom(validationError));
   }
 
   return neo4jHelpers.query(`
