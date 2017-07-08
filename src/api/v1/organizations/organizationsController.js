@@ -14,29 +14,16 @@ function deleteOrganization (organizationID) {
   let removeEmployeesResults = neo4jHelpers.query(`
     MATCH (o:Organization)-[r:Employs]->(u:User) DELETE r
       WHERE o.id = {id}
-    DELETE r
-    `, {id: organizationID});
+    DELETE r`,
+    {id: organizationID});
 
   // Remove the Organization and all attached nodes.
-  let removeOrganizationResults = neo4jHelpers.query(`
+  return neo4jHelpers.query(`
     MATCH(o:Organization)<-[]->(n)
       WHERE o.id = {id}
     DETACH DELETE o
     DETACH DELETE n`,
     {id: organizationID});
-
-  
-  // Old code would return the results from the query, but this method requires 2 queries! which to return?. 
-  /* 
-  return neo4jHelpers.query(`
-    MATCH (o:Organization {
-      id: {id}
-    })
-    DETACH DELETE o 
-    `,
-    {id: organizationID}
-  );
-  */
 }
 
 function getOrganization (organizationID) {
@@ -51,7 +38,7 @@ function getOrganization (organizationID) {
     })
     RETURN o
     LIMIT 1
-    `,
+   `,
     {id: organizationID}
   );
 }
