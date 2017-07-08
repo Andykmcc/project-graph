@@ -1,10 +1,14 @@
 const R = require('ramda');
 const Boom = require('boom');
+const neo4j = require('neo4j-driver').v1;
 const driver = require('../db');
 
 function handleSuccess (session, results) {
   session.close();
-  return results.records.map(record => record.toObject().n);
+
+  return results.records.map(record => {
+    return recordTransformer(R.pickAll(['labels', 'properties', 'relationships'], record.toObject().n));
+  });
 }
 
 function handleError (session, error) {
@@ -28,7 +32,26 @@ function query (queryString, data) {
     .catch(processError);
 }
 
+function convertNumbers (numberObject) {
+  const neo4jNum = neo4j.int(numberObject);
+  if (neo4j.integer.inSafeRange(neo4jNum)) {
+    return neo4jNum.toNumber();
+  } else {
+    return neo4jNum.toString();
+  }
+}
+
+function recordTransformer (record) {
+  return R.evolve({
+    properties: {
+      created_at: convertNumbers,
+      updated_at: convertNumbers
+    }
+  }, record);
+}
+
 module.exports = {
+  convertNumbers,
   handleSuccess,
   handleError,
   query

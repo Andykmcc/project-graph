@@ -15,7 +15,15 @@
             "Effort"
           ],
           "properties": {
-            "title": "example title 1"
+            "title": "example title 1",
+            "created_at": {
+              "low": 2082678994,
+              "high": 348
+            },
+            "updated_at": {
+              "low": 2082678994,
+              "high": 348
+            }
           }
         }
       ],
@@ -38,7 +46,16 @@
             "Effort"
           ],
           "properties": {
-            "title": "example title 2"
+            "title": "example title 2",
+            "updated_at": {
+              "low": 2081718963,
+              "high": 348
+            },
+            "description": "descriptiondelete1",
+            "created_at": {
+              "low": 2081718963,
+              "high": 348
+            }
           }
         }
       ],
@@ -61,7 +78,16 @@
             "Effort"
           ],
           "properties": {
-            "title": "example title 3"
+            "title": "example title 3",
+            "updated_at": {
+              "low": 2081936071,
+              "high": 348
+            },
+            "description": "descriptiondelete1",
+            "created_at": {
+              "low": 2081936071,
+              "high": 348
+            }
           }
         }
       ],
@@ -84,7 +110,16 @@
             "Effort"
           ],
           "properties": {
-            "title": "example title 4"
+            "title": "example title 4",
+            "updated_at": {
+              "low": 2082262642,
+              "high": 348
+            },
+            "description": "descriptiondelete1",
+            "created_at": {
+              "low": 2082262642,
+              "high": 348
+            }
           }
         }
       ],
@@ -107,7 +142,16 @@
             "Effort"
           ],
           "properties": {
-            "title": "example title 4"
+            "title": "example title 4",
+            "updated_at": {
+              "low": -1211535415,
+              "high": 348
+            },
+            "description": "sea ranch test ticket for subject v object",
+            "created_at": {
+              "low": -1211535415,
+              "high": 348
+            }
           }
         }
       ],
@@ -130,7 +174,16 @@
             "Effort"
           ],
           "properties": {
-            "title": "example title 6"
+            "title": "example title 6",
+            "updated_at": {
+              "low": -1210796754,
+              "high": 348
+            },
+            "description": "gotta do some stuff 2",
+            "created_at": {
+              "low": -1210796754,
+              "high": 348
+            }
           }
         }
       ],
