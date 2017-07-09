@@ -123,4 +123,25 @@ describe('effortsController', () => {
       return effortsPromise.should.be.fulfilled;
     });
   });
+
+  describe('#getEffort()', () => {
+    before(() => {
+      effortsController = proxyquire('api/v1/efforts/effortsController', {
+        '../../../services/neo4jHelpers': neo4jHelpersStub,
+        '../../../services/relationships': relationshipsStub.resolve
+      });
+    });
+
+    it('should return a promise', () => {
+      const effortsPromise = effortsController.getEffort('d261d453-1c45-4835-a9da-2ae08fbb4aa6')
+
+      return effortsPromise.should.be.fulfilled;
+    });
+
+    it('should reject if passed in invalid UUID', () => {
+      const effortsPromise = effortsController.getEffort('invalid-uuid')
+
+      return effortsPromise.should.be.rejected;
+    });
+  });
 });

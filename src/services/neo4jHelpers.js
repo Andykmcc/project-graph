@@ -7,7 +7,7 @@ function handleSuccess (session, results) {
   session.close();
 
   return results.records.map(record => {
-    return recordTransformer(R.pickAll(['labels', 'properties', 'relationships'], record.toObject().n));
+    return recordTransformer(R.pickAll(['labels', 'properties', 'relationships'], Object.values(record.toObject())[0]));
   });
 }
 

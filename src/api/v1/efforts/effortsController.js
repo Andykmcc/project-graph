@@ -1,12 +1,31 @@
 const uuid = require('uuid/v4');
 const R = require('ramda');
 const Boom = require('boom');
+const Joi = require('joi');
 const neo4jHelpers = require('../../../services/neo4jHelpers');
 const relationshipsService = require('../../../services/relationships');
+const exceptionHandler = require('../../../services/exceptionHandler');
 const effortsUtils = require('./effortsUtils');
 
 function getEfforts () {
   return neo4jHelpers.query('MATCH (n:Effort) RETURN n LIMIT 25');
+}
+
+function getEffort (effortId) {
+  const validationError = Joi.validate(effortId, Joi.string().guid({version: ['uuidv4']}).required()).error;
+  if (validationError) {
+    return Promise.reject(exceptionHandler.joiToBoom(validationError));
+  }
+
+  return neo4jHelpers.query(`
+    MATCH (e:Effort {
+      id: {id}
+    })
+    RETURN e
+    LIMIT 1
+    `,
+    {id: effortId}
+  );
 }
 
 function createEffort (effortParams) {
@@ -62,6 +81,7 @@ function createEffort (effortParams) {
 }
 
 module.exports = {
+  getEffort,
   getEfforts,
   createEffort
 }
