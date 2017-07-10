@@ -8,7 +8,7 @@
     "start:prod": "node ./bin/www",
     "start": "nodemon --inspect=0.0.0.0:9229 ./bin/www",
     "playground": "node ./bin/run-playground",
-    "precommit": "npm-run-all --parallel test test:security",
+    "prepush": "npm-run-all --parallel test test:security",
     "test": "NODE_ENV=testing NODE_PATH='./src' mocha",
     "test:security": "nsp check",
     "test:watch": "NODE_ENV=testing NODE_PATH='./src' mocha --watch",
