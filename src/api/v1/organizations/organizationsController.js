@@ -11,19 +11,19 @@ function deleteOrganization (organizationID) {
   }
 
   // Removes all Users employed by the organization.
-  let removeEmployeesResults = neo4jHelpers.query(`
-    MATCH (o:Organization)-[r:Employs]->(u:User) DELETE r
-      WHERE o.id = {id}
+  return neo4jHelpers.query(`
+    MATCH (o:Organization {id: {id}})-[r:EMPLOYS]->(u:User)
     DELETE r`,
     {id: organizationID});
 
   // Remove the Organization and all attached nodes.
+  /* 
   return neo4jHelpers.query(`
-    MATCH(o:Organization)<-[]->(n)
-      WHERE o.id = {id}
+    MATCH(o:Organization {id: {id}})<-[]->(n)
     DETACH DELETE o
     DETACH DELETE n`,
     {id: organizationID});
+   */
 }
 
 function getOrganization (organizationID) {
@@ -57,11 +57,11 @@ function createOrganization (organization) {
   if (validationError) {
     return Promise.reject(new Error(validationError));
   }
-
+  
   return neo4jHelpers.query(`
     CREATE (o:Organization {
       created_at: TIMESTAMP(),
-      id: '${uuid()}',
+      id: {'uuid()'}, 
       name: {name},
       description: {description} 
     })
