@@ -10,10 +10,12 @@ function deleteOrganization (organizationID) {
     return Promise.reject(new Error(validationError));
   }
 
+  // TODO: Test this real quick...
   // Removes all Users employed by the organization.
   return neo4jHelpers.query(`
-    MATCH (o:Organization {id: {id}})-[r:EMPLOYS]->(u:User)
-    DELETE r`,
+    MATCH (o:Organization {id:{id})<-[r]->(u:User)
+    DELETE r
+    RETURN o`,
     {id: organizationID});
 
   // Remove the Organization and all attached nodes.
